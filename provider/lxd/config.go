@@ -66,7 +66,7 @@ var (
 		var names []string
 		for name, attr := range configSchema {
 			if attr.Immutable {
-				names = append(names)
+				names = append(names, name)
 			}
 		}
 		return names
@@ -95,7 +95,7 @@ func adjustDefaults(cfg *config.Config, defaults map[string]interface{}) map[str
 
 	// The container type would be pulled from cfg if there were more
 	// than one possible type for this provider.
-	cType := instance.LXD
+	//cType := instance.LXD
 
 	// Set the proper default namespace.
 	raw := defaults[cfgNamespace]

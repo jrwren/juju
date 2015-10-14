@@ -95,10 +95,10 @@ func (env *environ) newRawInstance(args environs.StartInstanceParams) (*lxd_clie
 	if err != nil {
 		return nil, errors.Trace(err)
 	}
-	tags := []string{
+/*	tags := []string{
 		env.globalFirewallName(),
 		machineID,
-	}
+	}*/
 	// TODO(ericsnow) Use the env ID for the network name (instead of default)?
 	// TODO(ericsnow) Make the network name configurable?
 	// TODO(ericsnow) Support multiple networks?
