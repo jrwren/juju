@@ -8,10 +8,14 @@ import (
 
 	"github.com/juju/schema"
 
+	"github.com/juju/juju/container/lxc"
 	"github.com/juju/juju/environs/config"
 )
 
-const defaultStoragePort = 8040
+const (
+	defaultStoragePort = 8040
+	NetworkBridgeKey   = "network-bridge"
+)
 
 var (
 	configFields = schema.Fields{
@@ -21,12 +25,14 @@ var (
 		"storage-port":      schema.ForceInt(),
 		"storage-auth-key":  schema.String(),
 		"use-sshstorage":    schema.Bool(),
+		"network-bridge":    schema.String(),
 	}
 	configDefaults = schema.Defaults{
 		"bootstrap-user":    "",
 		"storage-listen-ip": "",
 		"storage-port":      defaultStoragePort,
 		"use-sshstorage":    true,
+		"network-bridge":    "",
 	}
 )
 
@@ -84,4 +90,20 @@ func (c *environConfig) storageAddr() string {
 // machine to listen on for its localstorage.
 func (c *environConfig) storageListenAddr() string {
 	return fmt.Sprintf("%s:%d", c.storageListenIPAddress(), c.storagePort())
+}
+
+// setDefaultNetworkBridge sets default network bridge if none is
+// provided. Default network bridge varies based on container type.
+func (c *environConfig) setDefaultNetworkBridge() {
+	name := c.networkBridge()
+	if name == "" {
+		name = lxc.DefaultLxcBridge
+	}
+	c.attrs[NetworkBridgeKey] = name
+}
+
+func (c *environConfig) networkBridge() string {
+	// We don't care if it's not a string, because Validate takes care
+	// of that.
+	return c.attrs[NetworkBridgeKey].(string)
 }

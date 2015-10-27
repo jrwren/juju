@@ -113,6 +113,7 @@ func (p manualProvider) validate(cfg, old *config.Config) (*environConfig, error
 		return nil, err
 	}
 	envConfig := newEnvironConfig(cfg, validated)
+	envConfig.setDefaultNetworkBridge()
 	if envConfig.bootstrapHost() == "" {
 		return nil, errNoBootstrapHost
 	}
